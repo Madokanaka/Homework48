@@ -23,8 +23,9 @@ public class VotingServer extends BasicServer{
     public VotingServer(String host, int port) throws IOException {
         super(host, port);
         registerGet("/", this::handleCandidatesPage);
-        registerPost("/vote", this::handleCandidatesVote);
+        registerGet("/vote", this::handleCandidatesVote);
         registerGet("/error", this::handleCandidateError);
+        registerGet("/thank-you", this::handleThankYouPage);
     }
 
 
@@ -71,7 +72,7 @@ public class VotingServer extends BasicServer{
     }
 
     private void handleCandidatesVote(HttpExchange exchange) {
-        String queryParams = getBody(exchange);
+        String queryParams = getQueryParams(exchange);
         Map<String, String> params = Utils.parseUrlEncoded(queryParams, "&");
         String idStr = params.get("id");
 
@@ -100,8 +101,37 @@ public class VotingServer extends BasicServer{
 
 
     private void handleCandidateError(HttpExchange exchange) {
-        renderTemplate(exchange, "error.ftlh", null);
+        renderTemplate(exchange, "error.html", null);
     }
 
+    private void handleThankYouPage(HttpExchange exchange) {
+        String queryParams = getQueryParams(exchange);
+        Map<String, String> params = Utils.parseUrlEncoded(queryParams, "&");
+        String idStr = params.get("id");
 
+        if (idStr == null) {
+            redirect303(exchange, "/error");
+            return;
+        }
+
+        int id;
+        try {
+            id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            redirect303(exchange, "/error");
+            return;
+        }
+
+        Candidate candidate = JsonUtil.findCandidateById(id);
+        if (candidate == null) {
+            redirect303(exchange, "/error");
+            return;
+        }
+
+        Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("candidate", candidate);
+        dataModel.put("totalVotes", JsonUtil.getTotalVotes());
+        System.out.println(JsonUtil.getTotalVotes());
+        renderTemplate(exchange, "/thankyou.ftlh", dataModel);
+    }
 }
