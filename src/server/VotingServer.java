@@ -13,7 +13,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -26,6 +29,7 @@ public class VotingServer extends BasicServer{
         registerGet("/vote", this::handleCandidatesVote);
         registerGet("/error", this::handleCandidateError);
         registerGet("/thank-you", this::handleThankYouPage);
+        registerGet("/votes", this::handleVotesPage);
     }
 
 
@@ -131,7 +135,17 @@ public class VotingServer extends BasicServer{
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("candidate", candidate);
         dataModel.put("totalVotes", JsonUtil.getTotalVotes());
-        System.out.println(JsonUtil.getTotalVotes());
         renderTemplate(exchange, "/thankyou.ftlh", dataModel);
     }
+
+    private void handleVotesPage(HttpExchange exchange) {
+        Map<String, Object> dataModel = new HashMap<>();
+        List<Candidate> candidates = JsonUtil.getCandidates();
+
+        Collections.sort(candidates, Comparator.comparingInt(Candidate::getVotes).reversed());
+        dataModel.put("candidates", candidates);
+        dataModel.put("totalVotes", JsonUtil.getTotalVotes());
+        renderTemplate(exchange, "votes.ftlh", dataModel);
+    }
+
 }

@@ -1,6 +1,7 @@
 package util;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import model.Candidate;
 
@@ -12,7 +13,10 @@ import java.util.List;
 
 public class JsonUtil {
 
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .create();
+
     private static final String FILE_PATH = "data/candidates.json";
     private static List<Candidate> candidates;
 
