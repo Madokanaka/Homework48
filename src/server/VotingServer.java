@@ -5,7 +5,9 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import model.Candidate;
 import util.JsonUtil;
+import util.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,6 +23,8 @@ public class VotingServer extends BasicServer{
     public VotingServer(String host, int port) throws IOException {
         super(host, port);
         registerGet("/", this::handleCandidatesPage);
+        registerPost("/vote", this::handleCandidatesVote);
+        registerGet("/error", this::handleCandidateError);
     }
 
 
@@ -65,4 +69,39 @@ public class VotingServer extends BasicServer{
         dataModel.put("candidates", JsonUtil.getCandidates());
         renderTemplate(exchange, "/candidates.ftlh", dataModel);
     }
+
+    private void handleCandidatesVote(HttpExchange exchange) {
+        String queryParams = getBody(exchange);
+        Map<String, String> params = Utils.parseUrlEncoded(queryParams, "&");
+        String idStr = params.get("id");
+
+        if (idStr == null) {
+            redirect303(exchange, "/error");
+            return;
+        }
+
+        int id;
+        try {
+            id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            redirect303(exchange, "/error");
+            return;
+        }
+
+        Candidate candidate = JsonUtil.findCandidateById(id);
+        if (candidate == null) {
+            redirect303(exchange, "/error");
+            return;
+        }
+
+        JsonUtil.voteForCandidate(id);
+        redirect303(exchange, "/thank-you?id=" + id);
+    }
+
+
+    private void handleCandidateError(HttpExchange exchange) {
+        renderTemplate(exchange, "error.ftlh", null);
+    }
+
+
 }

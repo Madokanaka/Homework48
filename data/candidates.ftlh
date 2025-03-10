@@ -13,10 +13,10 @@
   <main class="flex flex-wrap align-evenly">
     <#list candidates as candidate>
     <div class="card">
-      <form action="candidate" method="post" class="flex flex-col align-center">
+      <form action="vote" method="post" class="flex flex-col align-center">
         <img src="${candidate.photo}" alt="candidate ${candidate.id}">
         <p>${candidate.name}</p>
-        <input name="candidateId" type="hidden" value="${candidate.id}">
+        <input name="id" type="hidden" value="${candidate.id}">
         <button type="submit" class="vote flex align-center">Vote</button>
       </form>
     </div>
