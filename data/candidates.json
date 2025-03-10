@@ -1,8 +1,1 @@
-[
-  { "name": "Markus Sillman", "photo" : "1.jpeg" },
-  { "name": "Nikita Culler", "photo" : "2.jpeg" },
-  { "name": "Tawanna Melanson", "photo" : "3.jpeg" },
-  { "name": "Brunilda Mikels", "photo" : "4.jpeg" },
-  { "name": "Hubert Takahashi", "photo" : "5.jpeg" },
-  { "name": "Hershel Caffrey", "photo" : "6.jpeg" }
-]
+[{"id":1,"name":"Markus Sillman","photo":"1.jpeg","votes":19},{"id":2,"name":"Nikita Culler","photo":"2.jpeg","votes":1},{"id":3,"name":"Tawanna Melanson","photo":"3.jpeg","votes":0},{"id":4,"name":"Brunilda Mikels","photo":"4.jpeg","votes":0},{"id":5,"name":"Hubert Takahashi","photo":"5.jpeg","votes":0},{"id":6,"name":"Hershel Caffrey","photo":"6.jpeg","votes":0}]
