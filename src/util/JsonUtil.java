@@ -72,4 +72,11 @@ public class JsonUtil {
             }
         }
     }
+
+    public static int getTotalVotes() {
+        return candidates.stream()
+                .mapToInt(candidate -> candidate.getVotes() == null ? 0 : candidate.getVotes())
+                .sum();
+
+    }
 }
