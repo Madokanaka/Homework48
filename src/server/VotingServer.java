@@ -5,11 +5,14 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import util.JsonUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class VotingServer extends BasicServer{
@@ -17,6 +20,7 @@ public class VotingServer extends BasicServer{
 
     public VotingServer(String host, int port) throws IOException {
         super(host, port);
+        registerGet("/", this::handleCandidatesPage);
     }
 
 
@@ -54,5 +58,11 @@ public class VotingServer extends BasicServer{
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
+    }
+
+    private void handleCandidatesPage(HttpExchange exchange) {
+        Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("candidates", JsonUtil.getCandidates());
+        renderTemplate(exchange, "/candidates.ftlh", dataModel);
     }
 }
