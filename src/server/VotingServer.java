@@ -193,14 +193,6 @@ public class VotingServer extends BasicServer {
                 redirect303(exchange, "/error");
                 return;
             }
-            if (loggedInUser.getCandidateVoted() != null) {
-                Map<String, Object> dataModel = new HashMap<>();
-                dataModel.put("user", loggedInUser);
-                dataModel.put("candidate", JsonUtil.findCandidateById(loggedInUser.getCandidateVoted()));
-
-                renderTemplate(exchange, "alreadyvoted.ftlh", dataModel);
-                return;
-            }
 
             Map<String, Object> dataModel = new HashMap<>();
             dataModel.put("candidate", candidate);
