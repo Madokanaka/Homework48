@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Вход</title>
+    <link rel="stylesheet" href="./candidates.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+<body class="d-flex align-items-center justify-content-center vh-100">
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -32,7 +33,7 @@
                             </#if>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100">Войти</button>
+                        <button type="submit" class="back w-100">Войти</button>
                     </fieldset>
                 </form>
             </div>
@@ -40,6 +41,5 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

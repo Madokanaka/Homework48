@@ -203,15 +203,24 @@ public class VotingServer extends BasicServer {
     }
 
     private void loginGet(HttpExchange exchange) {
-        Path path = makeFilePath("register-login/login.ftlh");
-        sendFile(exchange, path, ContentType.TEXT_HTML);
+        Map<String, Object> data = new HashMap<>();
+        data.put("error", null);
+        renderTemplate(exchange, "register-login/login.ftlh", data);
     }
 
     private void loginPost(HttpExchange exchange) {
         String raw = getBody(exchange);
         Map<String, String> params = Utils.parseUrlEncoded(raw, "&");
         String email = params.get("email");
-        String password = params.get("user-password");
+        String password = params.get("password");
+
+        if (email == null || email.isEmpty() ||
+                password == null || password.isEmpty()) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("error", "Все поля должны быть заполнены!");
+            renderTemplate(exchange, "register-login/login.ftlh", data);
+            return;
+        }
 
         User user = JsonUtil.getUserByEmail(email);
         if (user != null && user.getPassword().equals(password)) {
@@ -230,8 +239,7 @@ public class VotingServer extends BasicServer {
     }
 
     private void loginError(HttpExchange exchange) {
-        Path path = makeFilePath("register-login/login_error.ftlh");
-        sendFile(exchange, path, ContentType.TEXT_HTML);
+        renderTemplate(exchange, "register-login/login-error.ftlh", Collections.emptyMap());
     }
 
     private void handleRegisterPage(HttpExchange exchange) {
