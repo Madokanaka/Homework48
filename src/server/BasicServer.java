@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -183,5 +184,15 @@ public abstract class BasicServer {
     protected String getQueryParams(HttpExchange exchange) {
         String queryParams = exchange.getRequestURI().getQuery();
         return Objects.nonNull(queryParams) ? queryParams : "";
+    }
+
+    protected void setCookie(HttpExchange exchange, Cookie cookie) {
+        exchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
+    }
+
+    protected String getCookie(HttpExchange exchange) {
+        return exchange.getRequestHeaders()
+                .getOrDefault("Cookie", List.of(""))
+                .get(0);
     }
 }
