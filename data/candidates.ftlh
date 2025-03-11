@@ -25,6 +25,9 @@
 
   <p>-------------------------------------------------------</p>
   <a class="back flex align-center" href="/votes">Show total votes</a>
+
+  <p>-------------------------------------------------------</p>
+  <a class="back flex align-center" href="/logout">Log out</a>
 </div>
 </body>
 

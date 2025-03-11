@@ -3,6 +3,14 @@
     "id": "774b49f2-d1e5-4a07-99b0-a0682dc14ebe",
     "name": "af",
     "email": "afdsa@mail.rj",
-    "password": "asdf"
+    "password": "asdf",
+    "candidateVoted": 1
+  },
+  {
+    "id": "f3d97df8-352c-422f-9d81-cdf6400c5730",
+    "name": "asdf",
+    "email": "sasd@ma.ru",
+    "password": "asdf",
+    "candidateVoted": 1
   }
 ]

@@ -42,6 +42,7 @@ public class VotingServer extends BasicServer {
         registerPost("/register", this::handleRegisterPost);
         registerGet("/register-error", this::registerErrorPage);
         registerGet("/register-success", this::registerSuccessPage);
+        registerGet("/logout", this::logoutHandler);
     }
 
 
@@ -106,6 +107,7 @@ public class VotingServer extends BasicServer {
         User loggedInUser = sessionId != null ? sessions.get(sessionId) : null;
 
         if (loggedInUser != null) {
+
             String queryParams = getBody(exchange);
             Map<String, String> params = Utils.parseUrlEncoded(queryParams, "&");
             String idStr = params.get("id");
@@ -128,8 +130,18 @@ public class VotingServer extends BasicServer {
                 redirect303(exchange, "/error");
                 return;
             }
+            if (loggedInUser.getCandidateVoted() != null) {
+                Map<String, Object> dataModel = new HashMap<>();
+                dataModel.put("user", loggedInUser);
+                dataModel.put("candidate", JsonUtil.findCandidateById(loggedInUser.getCandidateVoted()));
+
+                renderTemplate(exchange, "alreadyvoted.ftlh", dataModel);
+                return;
+            }
 
             JsonUtil.voteForCandidate(id);
+            loggedInUser.setCandidateVoted(id);
+            JsonUtil.writeUsersToFile();
             redirect303(exchange, "/thank-you?id=" + id);
         } else {
             renderTemplate(exchange, "register-login/unlogged.html", Collections.emptyMap());
@@ -292,4 +304,20 @@ public class VotingServer extends BasicServer {
         renderTemplate(exchange, "register-login/register_result.ftlh", data);
     }
 
+    private void logoutHandler(HttpExchange exchange) {
+        String cookieString = getCookie(exchange);
+        Map<String, String> cookies = Cookie.parse(cookieString);
+        String sessionId = cookies.get("sessionId");
+
+        if(sessionId != null) {
+            sessions.remove(sessionId);
+        }
+
+        Cookie expiredCookie = Cookie.make("sessionId", "");
+        expiredCookie.setMaxAge(0);
+        expiredCookie.setHttpOnly(true);
+        setCookie(exchange, expiredCookie);
+
+        redirect303(exchange, "/login");
+    }
 }
