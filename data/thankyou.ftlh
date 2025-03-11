@@ -15,10 +15,11 @@
             <div class="flex flex-col align-center">
                 <img src="${candidate.photo}" alt="candidate ${candidate.id}">
                 <p><strong>${candidate.name}</strong></p>
+                <p>Thank you for your vote!</p>
                 <#if totalVotes == 0>
                     <p>Percentage: 0%</p>
                 <#else>
-                    <p>Percentage: ${((candidate.votes * 100) / totalVotes)?number?round}%</p>
+                    <p>Now i have ${((candidate.votes * 100) / totalVotes)?number?round}% of all votes</p>
                 </#if>
 
             </div>

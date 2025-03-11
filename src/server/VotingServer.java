@@ -107,7 +107,6 @@ public class VotingServer extends BasicServer {
         User loggedInUser = sessionId != null ? sessions.get(sessionId) : null;
 
         if (loggedInUser != null) {
-
             String queryParams = getBody(exchange);
             Map<String, String> params = Utils.parseUrlEncoded(queryParams, "&");
             String idStr = params.get("id");
@@ -192,6 +191,14 @@ public class VotingServer extends BasicServer {
             Candidate candidate = JsonUtil.findCandidateById(id);
             if (candidate == null) {
                 redirect303(exchange, "/error");
+                return;
+            }
+            if (loggedInUser.getCandidateVoted() != null) {
+                Map<String, Object> dataModel = new HashMap<>();
+                dataModel.put("user", loggedInUser);
+                dataModel.put("candidate", JsonUtil.findCandidateById(loggedInUser.getCandidateVoted()));
+
+                renderTemplate(exchange, "alreadyvoted.ftlh", dataModel);
                 return;
             }
 
